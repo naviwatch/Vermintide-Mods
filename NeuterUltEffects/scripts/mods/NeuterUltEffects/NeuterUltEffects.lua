@@ -66,29 +66,28 @@ local name_to_mood = {
 	RANGER = "skill_ranger",
 	SHADE = "skill_shade",
 }
-mod:hook(StateInGameRunning, "update_mood", function (func, ...)
-	for name, mood in pairs( name_to_mood ) do
-		if mod:get(mod.SETTING_NAMES[name.."_VISUAL"]) then
-			MOOD_BLACKBOARD[mood] = false
+mod:hook(MoodHandler, "set_mood", function(func, self, mood_name, reason, value)
+	for name, mood in pairs(name_to_mood) do 
+		if mood_name == mood and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES[name .. "_VISUAL"]) then
+			return
 		end
 	end
-	if mod:get(mod.SETTING_NAMES["HUNTSMAN_VISUAL"]) then
-		MOOD_BLACKBOARD["skill_huntsman_surge"] = false
-		MOOD_BLACKBOARD["skill_huntsman_stealth"] = false
+		
+	if mood_name == "wounded" or mood_name == "bleeding_out" then
+		if NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.WOUNDED) then
+			return
+		end
+	elseif mood_name == "knocked_down" and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.KNOCKED_DOWN) then
+		return
+	elseif mood_name == "heal_medikit" and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.HEALING) then
+		return
+	elseif mood_name == "skill_huntsman_surge" or mood_name == "skill_huntsman_stealth" then
+		if NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES["HUNTSMAN_VISUAL"]) then
+			return
+		end
 	end
 
-	if mod:get(mod.SETTING_NAMES.WOUNDED) then
-		MOOD_BLACKBOARD["wounded"] = false
-	end
-	if mod:get(mod.SETTING_NAMES.KNOCKED_DOWN) then
-		MOOD_BLACKBOARD["knocked_down"] = false
-	end
-
-	if mod:get(mod.SETTING_NAMES.HEALING) then
-		MOOD_BLACKBOARD["heal_medikit"] = false
-	end
-
-	return func(...)
+	return func(self, mood_name, reason, value)
 end)
 
 --- Skip ult audio distortions.
