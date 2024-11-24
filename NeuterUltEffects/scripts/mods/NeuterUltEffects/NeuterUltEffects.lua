@@ -68,7 +68,7 @@ local name_to_mood = {
 }
 mod:hook(MoodHandler, "set_mood", function(func, self, mood_name, reason, value)
 	for name, mood in pairs(name_to_mood) do 
-		if mood_name == mood and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES[name .. "_VISUAL"]) then
+		if mood_name == mood and mod:get(NeuterUltEffects.SETTING_NAMES[name .. "_VISUAL"]) then
 			return
 		end
 	end
@@ -77,12 +77,12 @@ mod:hook(MoodHandler, "set_mood", function(func, self, mood_name, reason, value)
 		if NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.WOUNDED) then
 			return
 		end
-	elseif mood_name == "knocked_down" and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.KNOCKED_DOWN) then
+	elseif mood_name == "knocked_down" and mod:get(NeuterUltEffects.SETTING_NAMES.KNOCKED_DOWN) then
 		return
-	elseif mood_name == "heal_medikit" and NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES.HEALING) then
+	elseif mood_name == "heal_medikit" and mod:get(NeuterUltEffects.SETTING_NAMES.HEALING) then
 		return
 	elseif mood_name == "skill_huntsman_surge" or mood_name == "skill_huntsman_stealth" then
-		if NeuterUltEffects:get(NeuterUltEffects.SETTING_NAMES["HUNTSMAN_VISUAL"]) then
+		if mod:get(NeuterUltEffects.SETTING_NAMES["HUNTSMAN_VISUAL"]) then
 			return
 		end
 	end
